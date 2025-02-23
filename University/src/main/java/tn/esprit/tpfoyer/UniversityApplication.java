@@ -11,10 +11,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAspectJAutoProxy
 @SpringBootApplication
 @EnableDiscoveryClient
-public class TpFoyerApplication {
+public class UniversityApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TpFoyerApplication.class, args);
+        SpringApplication.run(UniversityApplication.class, args);
     }
 
 }

@@ -10,10 +10,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableAspectJAutoProxy
 @SpringBootApplication
 @EnableDiscoveryClient
-public class TpFoyerApplication {
+public class EtudiantApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TpFoyerApplication.class, args);
+        SpringApplication.run(EtudiantApplication.class, args);
     }
 
 }
