@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import tn.esprit.tpfoyer.Reservation;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, String> {
+public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 }

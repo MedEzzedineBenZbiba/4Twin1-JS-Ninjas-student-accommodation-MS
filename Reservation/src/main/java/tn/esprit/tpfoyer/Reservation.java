@@ -15,7 +15,9 @@ import java.util.Set;
 @ToString
 public class Reservation {
     @Id
-    private String idReservation;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idReservation;
+
     private Date anneeUniversitaire;
     private boolean estValide;
 

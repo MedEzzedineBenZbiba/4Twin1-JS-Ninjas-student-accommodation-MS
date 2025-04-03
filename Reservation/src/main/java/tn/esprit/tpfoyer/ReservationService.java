@@ -20,7 +20,7 @@ public class ReservationService implements IReservationService{
     }
 
     @Override
-    public Reservation retrieveReservation(String reservationId) {
+    public Reservation retrieveReservation(Integer reservationId) {
         return reservationRepository.findById(reservationId).get();
     }
 
@@ -30,7 +30,7 @@ public class ReservationService implements IReservationService{
     }
 
     @Override
-    public void removeReservation(String reservationId) {
+    public void removeReservation(Integer reservationId) {
         reservationRepository.deleteById(reservationId);
     }
 
