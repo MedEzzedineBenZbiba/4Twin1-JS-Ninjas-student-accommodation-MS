@@ -2,11 +2,13 @@ package tn.esprit.tpfoyer;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -15,6 +17,7 @@ import java.util.List;
 @Tag(name = "Gestion reservation")
 public class ReservationRestController {
     IReservationService reservationService;
+    EmailService emailService;
 
     @Operation(description = "récupérer toutes les reservations de la base de données")
     @GetMapping
@@ -38,6 +41,13 @@ public class ReservationRestController {
     @Operation(description = "Ajouter une reservation ")
     @PostMapping
     public Reservation addReservation(@RequestBody Reservation reservation){
+        try {
+            emailService.sendEmail("benzbibaezzdine@gmail.com", "test subject", "test body");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return reservationService.addReservation(reservation);
     }
 
