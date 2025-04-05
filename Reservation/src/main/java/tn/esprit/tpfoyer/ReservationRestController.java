@@ -38,6 +38,13 @@ public class ReservationRestController {
         return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 
+    @Operation(description = "récupérer toutes les reservations par validiter")
+    @GetMapping("ByValidity/{booleanValue}")
+    public ResponseEntity<List<Reservation>> getReservation(@PathVariable("booleanValue") Boolean b){
+       List<Reservation> reservationsByValidity = reservationService.retreiveAllReservationsByValidity(b);
+        return ResponseEntity.status(HttpStatus.OK).body(reservationsByValidity);
+    }
+
     @Operation(description = "Ajouter une reservation ")
     @PostMapping
     public Reservation addReservation(@RequestBody Reservation reservation){

@@ -39,6 +39,11 @@ public class ReservationService implements IReservationService{
         return reservationRepository.save(reservation);
     }
 
+    @Override
+    public List<Reservation> retreiveAllReservationsByValidity(boolean b) {
+        return reservationRepository.findAllByEstValide(b);
+    }
+
     @Scheduled(fixedRate = 50000)
     public void mettreAJourEtAffciherReservations() {
         List<Reservation> reservations = reservationRepository.findAll();

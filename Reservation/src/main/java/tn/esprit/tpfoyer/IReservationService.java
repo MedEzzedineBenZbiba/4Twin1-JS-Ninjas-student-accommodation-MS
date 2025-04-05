@@ -10,5 +10,6 @@ public interface IReservationService {
     public Reservation addReservation(Reservation reservation);
     public void removeReservation(Integer reservationId);
     public Reservation modifyReservation(Reservation reservation);
+    public List<Reservation> retreiveAllReservationsByValidity(boolean b);
 
 }
