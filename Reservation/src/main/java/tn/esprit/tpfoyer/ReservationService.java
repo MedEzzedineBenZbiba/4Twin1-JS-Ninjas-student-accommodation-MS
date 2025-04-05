@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -43,6 +44,21 @@ public class ReservationService implements IReservationService{
     public List<Reservation> retreiveAllReservationsByValidity(boolean b) {
         return reservationRepository.findAllByEstValide(b);
     }
+
+    public List<Reservation> getAllReservationsOrderedByDateDesc() {
+        return reservationRepository.findAllOrderedByDateDesc();
+    }
+
+    @Override
+    public Integer ReservationsNumberBetweenDates(Date startDate, Date endDate) {
+        return reservationRepository.ReservationsNumberBetweenDates(startDate, endDate);
+    }
+
+    @Override
+    public List<Reservation> findAllOrderedByDateDesc() {
+        return reservationRepository.findAllOrderedByDateDesc();
+    }
+
 
     @Scheduled(fixedRate = 50000)
     public void mettreAJourEtAffciherReservations() {

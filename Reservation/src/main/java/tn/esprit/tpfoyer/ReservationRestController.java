@@ -4,11 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -44,6 +46,24 @@ public class ReservationRestController {
        List<Reservation> reservationsByValidity = reservationService.retreiveAllReservationsByValidity(b);
         return ResponseEntity.status(HttpStatus.OK).body(reservationsByValidity);
     }
+
+    @Operation(description = "récupérer nombre de réservations entre deux dates")
+    @GetMapping("ByDate/{start}/{end}")
+    public ResponseEntity<Integer> getReservation(
+            @PathVariable("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
+            @PathVariable("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end) {
+
+        Integer reservationsNumber = reservationService.ReservationsNumberBetweenDates(start, end);
+        return ResponseEntity.status(HttpStatus.OK).body(reservationsNumber);
+    }
+
+    @Operation(description = "Get all reservations ordered by date descending")
+    @GetMapping("orderedByDateDesc")
+    public ResponseEntity<List<Reservation>> getReservationsOrderedByDateDesc() {
+        List<Reservation> reservations = reservationService.findAllOrderedByDateDesc();
+        return ResponseEntity.ok(reservations);
+    }
+
 
     @Operation(description = "Ajouter une reservation ")
     @PostMapping
