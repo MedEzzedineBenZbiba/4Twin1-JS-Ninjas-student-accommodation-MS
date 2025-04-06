@@ -69,7 +69,7 @@ public class ReservationRestController {
     @PostMapping
     public Reservation addReservation(@RequestBody Reservation reservation){
         try {
-            emailService.sendEmail("benzbibaezzdine@gmail.com", "test subject", "test body");
+            emailService.sendEmail("benzbibaezzdine@gmail.com", "Reservation confirmed",  false);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

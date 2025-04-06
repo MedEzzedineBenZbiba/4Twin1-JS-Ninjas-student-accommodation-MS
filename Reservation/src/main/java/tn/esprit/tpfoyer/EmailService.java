@@ -29,12 +29,10 @@ public class EmailService {
 
     @Value("${spring.mail.username}")
     private String senderEmail ;
-
     private String recipientName = "karim";
 
     @Async
-    public void sendEmail(String to, String subject, String body) throws MessagingException, IOException {
-
+    public void sendEmail(String to, String subject, boolean reminder) throws MessagingException, IOException {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -44,13 +42,28 @@ public class EmailService {
 
         Resource resource = new ClassPathResource("templates/emailTemplate.html");
         String template = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-        String htmlContent = template.replace("{{name}}", recipientName);
+        String htmlContent;
+        ClassPathResource image;
+        if (reminder) {
+            image = new ClassPathResource("reminder.png");
+            htmlContent = template
+                    .replace("{{Heading}}", "Reminder: Action Required ⚠️")
+                    .replace("{{name}}", recipientName)
+                    .replace("{{msg1}}", "Your reservation is")
+                    .replace("{{msg2}}", "not confirmed yet.")
+                    .replace("{{msg3}}", "Please make your payment at your earliest convenience to secure your spot.");
+        } else {
+            image = new ClassPathResource("reserved.png");
+            htmlContent = template
+                    .replace("{{Heading}}", "Your Reservation is Completed 🎉")
+                    .replace("{{name}}", recipientName)
+                    .replace("{{msg1}}", "Your reservation has been")
+                    .replace("{{msg2}}", "successfully created.")
+                    .replace("{{msg3}}", "Please make your payment soon to confirm it.");
+        }
+
         helper.setText(htmlContent, true);
-        // Add image inline using Content-ID (cid)
-        ClassPathResource image = new ClassPathResource("reserved.png");
-        helper.addInline("reservedImage", image);
-//        ClassPathResource image = new ClassPathResource("reserved.png");
-//        helper.addAttachment("happyBirthday.jpg", image);
+        helper.addInline("image", image);
 
         mailSender.send(message);
     }

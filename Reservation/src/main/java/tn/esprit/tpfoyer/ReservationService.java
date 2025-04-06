@@ -1,10 +1,12 @@
 package tn.esprit.tpfoyer;
 
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -15,6 +17,7 @@ import java.util.List;
 @Slf4j
 public class ReservationService implements IReservationService{
     ReservationRepository reservationRepository;
+    EmailService emailService;
     @Override
     public List<Reservation> retreiveAllReservations() {
         return reservationRepository.findAll();
@@ -60,22 +63,20 @@ public class ReservationService implements IReservationService{
     }
 
 
-    @Scheduled(fixedRate = 50000)
-    public void mettreAJourEtAffciherReservations() {
-        List<Reservation> reservations = reservationRepository.findAll();
+    @Scheduled(cron = "0 */2 * * * *")
+    public void remindStudentsToConfirmReservation() {
+        List<Reservation> invalidReservations = reservationRepository.findAllByEstValide(false);
 
-        String string = "01-01-2024";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        LocalDate localDate = LocalDate.parse(string, formatter);
-        java.util.Date d = java.sql.Date.valueOf(localDate);
-
-        for(Reservation r : reservations) {
-            if(r.getAnneeUniversitaire().before(d)) {
-                r.setEstValide(false);
-                reservationRepository.save(r);
+        for (Reservation r : invalidReservations ) {
+            log.info("repo" + r);
+            try {
+                emailService.sendEmail("benzbibaezzdine@gmail.com", "pay reminder" , true);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            log.info(("repo" + r));
-
         }
     }
+
 }
