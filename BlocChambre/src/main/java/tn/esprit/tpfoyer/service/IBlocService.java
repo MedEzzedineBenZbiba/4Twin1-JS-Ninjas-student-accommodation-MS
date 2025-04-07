@@ -3,17 +3,14 @@ package tn.esprit.tpfoyer.service;
 import tn.esprit.tpfoyer.entity.Bloc;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface IBlocService {
-    public List<Bloc> retrieveAllBlocs();
-    public Bloc retrieveBloc(Long idBloc);
-    public Bloc addBloc(Bloc bloc);
-    public void removeBloc(Long IdBloc);
-    public Bloc modifyBloc(Bloc bloc);
-    public Bloc AddBlocAndFoyerWithAffectation(Bloc bloc);
-    public Bloc AffectBlocToFoyer(Long idFoyer, Long idBloc);
-    public Bloc desacffectBlocFromFoyer(Long idBloc);
-    public List<Bloc> retrieveBlocsSansFoyer();
-
+     List<Bloc> retrieveAllBlocs();
+     Bloc retrieveBloc(Long idBloc);
+     Bloc addBloc(Bloc bloc);
+     void removeBloc(Long IdBloc);
+     Bloc modifyBloc(Bloc bloc);
+     List<Bloc> findBlocsByCapaciteMinimum(Long capaciteMin);
 }

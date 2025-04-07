@@ -1,35 +1,44 @@
 package tn.esprit.tpfoyer.service;
 
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import tn.esprit.tpfoyer.entity.Bloc;
 import tn.esprit.tpfoyer.repository.BlocRepository;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
-@AllArgsConstructor
 @Slf4j
-public class BlocServiceImpl implements IBlocService{
-    BlocRepository blocRepository;
+public class BlocServiceImpl implements IBlocService {
 
+    private final BlocRepository blocRepository;
+    private final RestTemplate restTemplate;
 
+    public BlocServiceImpl(BlocRepository blocRepository, RestTemplate restTemplate) {
+        this.blocRepository = blocRepository;
+        this.restTemplate = restTemplate;
+    }
+
+    // Méthodes CRUD de base
     @Scheduled(fixedRate = 60000)
     @Override
     public List<Bloc> retrieveAllBlocs() {
-        List<Bloc> blocs =  blocRepository.findAll();
-        for(Bloc b : blocs) {
-            log.info("Bloc : "  + b);
-        }
+        List<Bloc> blocs = blocRepository.findAll();
+        blocs.forEach(b -> log.info("Bloc : {}", b));
         return blocs;
     }
 
     @Override
     public Bloc retrieveBloc(Long idBloc) {
-        return blocRepository.findById(idBloc).get();
+        return blocRepository.findById(idBloc)
+                .orElseThrow(() -> new RuntimeException("Bloc non trouvé"));
     }
 
     @Override
@@ -48,30 +57,8 @@ public class BlocServiceImpl implements IBlocService{
     }
 
     @Override
-    public Bloc AddBlocAndFoyerWithAffectation(Bloc bloc) {
-        return blocRepository.save(bloc);
+    public List<Bloc> findBlocsByCapaciteMinimum(Long capaciteMin) {
+        return blocRepository.findByCapaciteBlocGreaterThanEqual(capaciteMin);
     }
-
-    @Override
-    public Bloc AffectBlocToFoyer(Long idFoyer, Long idBloc) {
-        return null;
-    }
-
-    @Override
-    public Bloc desacffectBlocFromFoyer(Long idBloc) {
-        return null;
-    }
-
-    @Override
-    public List<Bloc> retrieveBlocsSansFoyer() {
-        return null;
-    }
-
-
-//    @Override
-//    public List<Bloc> retrieveBlocsSansFoyer() {
-//        return blocRepository.findAllByFoyerNull();
-//    }
-
 
 }

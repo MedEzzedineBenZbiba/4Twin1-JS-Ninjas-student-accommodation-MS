@@ -15,7 +15,7 @@ public class ChambreServiceImpl implements IChambreService {
     public List<Chambre> retrieveAllChambres() {
         return chambreRepository.findAll();
     }
-    public Chambre retrieveChambre(Long chambreId) {
+    public Chambre retrieveChambreById(Long chambreId) {
         return chambreRepository.findById(chambreId).get();
     }
     public Chambre addChambre(Chambre c) {
@@ -38,13 +38,4 @@ public class ChambreServiceImpl implements IChambreService {
         return chambreRepository.findChambreByNumeroChambre(numC);
     }
 
-    @Override
-    public Chambre retrieveChambreByEtudiantCin(Long cin) {
-        return null;
-    }
-
-//    @Override
-//    public Chambre retrieveChambreByEtudiantCin(Long cin) {
-//        return chambreRepository.retreiveChambreByEtudiantCin(cin);
-//    }
 }

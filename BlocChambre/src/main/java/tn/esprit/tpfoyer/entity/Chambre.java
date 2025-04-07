@@ -24,8 +24,6 @@ public class Chambre {
     private TypeChambre typeC;
 
 
-
-
     @ManyToOne
     private Bloc bloc;
 }

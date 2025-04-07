@@ -18,12 +18,8 @@ public class GatewayApplication {
     @Bean
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("EDUDIANT", r->r.path("/etudiant/**").uri("lb://EDUDIANT"))
-                .route("RESERVATION", r->r.path("/reservation/**").uri("lb://RESERVATION"))
-                .route("UNIVERSITY", r->r.path("/university/**").uri("lb://UNIVERSITY"))
                 .route("BLOCCHAMBRE", r->r.path("/bloc/**").uri("lb://BLOCCHAMBRE"))
                 .route("BLOCCHAMBRE", r->r.path("/chambre/**").uri("lb://BLOCCHAMBRE"))
-                .route("FOYER", r->r.path("/foyer/**").uri("lb://FOYER"))
                 .build();
     }
 

@@ -14,10 +14,4 @@ import java.util.List;
 public interface ChambreRepository extends JpaRepository<Chambre, Long> {
     List<Chambre> findAllByTypeC(TypeChambre tc);
     Chambre findChambreByNumeroChambre(Long numc);
-//    @Query("select distinct(ch) from Chambre ch " +
-//            " inner join ch.reservations reservation " +
-//            "inner join reservation.etudiants e " +
-//            "where e.cin = :cin ")
-//    Chambre retreiveChambreByEtudiantCin(@Param("cin") Long cin);
-
 }
