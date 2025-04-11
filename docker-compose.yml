@@ -1,0 +1,89 @@
+version: '3.9'
+
+services:
+  micro-etudiant:
+    build: ./Etudiant
+    image: nourbouafoura/etudiant
+    container_name: etudiant
+    ports:
+      - "8089:8089" 
+    depends_on:
+      - mondb
+      - eurekaserver
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mondb:3306/etudiant_db?createDatabaseIfNotExist=true&useSSL=false&max_allowed_packet=15728640&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_DATABASE-PLATFORM=org.hibernate.dialect.MySQL8Dialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_GENERATE-DDL=false
+
+  eurekaserver:
+    build: ./EurekaServer
+    image: nourbouafoura/eureka
+    container_name: eureka
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka
+
+  API-gateway:
+    build: ./GatewayProject
+    image: nourbouafoura/apigateway
+    container_name: apigateway
+    ports:
+      - "8090:8090"
+    depends_on:
+      - eurekaserver
+      - micro-etudiant
+      - micro-mailing
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka
+
+  mondb:
+    image: mysql:8.0.30
+    container_name: mondb
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=etudiant_db
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  etudiant-ui:
+    build: ./etudiant-ui
+    image: etudiant-ui
+    container_name: etudiant-ui
+    ports:
+      - "3000:80"
+    depends_on:
+      - API-gateway
+  
+  micro-mailing:
+    build: ./Mailing
+    image: nourbouafoura/mailing
+    container_name: mailing
+    ports:
+      - "4000:4000"
+    depends_on:
+      - eurekaserver
+      - mongo-mailing
+    environment:
+      - MONGO_URI=mongodb://mongo-mailing:27017/mailing
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka
+
+  mongo-mailing:
+    image: mongo:4.4
+    container_name: mongo-mailing
+    ports:
+      - "27018:27017"  # Optionnel : pour accéder à MongoDB depuis l'hôte sur le port 27018
+    volumes:
+      - mongo-mailing-data:/data/db
+
+volumes:
+  mysql-data:
+  mongo-mailing-data:
