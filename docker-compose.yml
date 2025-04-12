@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+
+
+
+  University:
+    build: ./University
+    image: bouafouraelaa/university
+    container_name: university
+    ports:
+      - "8087:8087"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_APPLICATION_NAME=UNIVERSITY
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:./Database/Data/University
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    volumes:
+      - university-data:/Database/Data/  
+
+  eureka-server:
+    build: ./EurekaServer
+    image: bouafouraelaa/eurekaserver
+    container_name: EurekaServer
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  API-gateway:
+    build: ./GatewayProject
+    image: bouafouraelaa/gateway
+    container_name: gateway
+    ports:
+      - "8090:8090"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+volumes:
+  university-data:
+    name: university-data

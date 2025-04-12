@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
 
-// Configuration de l'icône du marqueur
+
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -18,7 +18,7 @@ const LocationMarker = ({ setPosition, setFormData }) => {
     async click(e) {
       setPosition(e.latlng);
       try {
-        // Utiliser l'API de géocodage inverse pour obtenir l'adresse à partir des coordonnées
+        
         const response = await axios.get(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`
         );
@@ -52,14 +52,14 @@ const UniversiteStats = () => {
     position: null
   });
 
-  // Charger les statistiques initiales
+      
   useEffect(() => {
     fetchStats();
   }, []);
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get('http://localhost:8087/stats/adresse');
+      const response = await axios.get('http://localhost:8090/university/stats/adresse');
       const statsArray = Object.entries(response.data).map(([adresse, count]) => ({
         adresse,
         count: Math.floor(Number(count))
@@ -80,13 +80,13 @@ const UniversiteStats = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8087/add-university', {
+      await axios.post('http://localhost:8090/university', {
         nomUniversite: formData.nomUniversite,
         adresse: formData.adresse,
         latitude: formData.position?.lat,
         longitude: formData.position?.lng
       });
-      fetchStats(); // Rafraîchir les stats
+      fetchStats(); 
       setShowForm(false);
       setFormData({
         nomUniversite: '',
@@ -140,7 +140,7 @@ const UniversiteStats = () => {
             
             <div className="map-container">
               <MapContainer
-                center={[48.8566, 2.3522]} // Paris par défaut
+                center={[ 36.862499, 10.195556]} 
                 zoom={13}
                 style={{ height: '300px', width: '100%' }}
               >

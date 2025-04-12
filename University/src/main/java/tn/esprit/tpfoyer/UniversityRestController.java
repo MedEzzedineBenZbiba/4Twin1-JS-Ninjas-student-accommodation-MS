@@ -13,15 +13,15 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("")
-@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("university")
+
 
 @Tag(name = "Gestion université")
 public class UniversityRestController {
     IUniversiteService universiteService;
 
     @Operation(description = "récupérer toutes les universités de la base de données")
-    @GetMapping("retrieve-all-universities")
+    @GetMapping("")
     public List<Universite> getAllUniversities(){
         return universiteService.retreiveAllUniversities();
     }
@@ -33,19 +33,19 @@ public class UniversityRestController {
     }
 
     @Operation(description = "Ajouter une université")
-    @PostMapping("add-university")
+    @PostMapping("")
     public Universite addUniversity(@RequestBody Universite universite){
         return universiteService.addUniversity(universite);
     }
 
     @Operation(description = "retirer une université par id")
-    @DeleteMapping("delete-university/{university-id}")
+    @DeleteMapping("{university-id}")
     public void removeUniversity(@PathVariable("university-id") Long univerisityId){
         universiteService.removeUniversity(univerisityId);
     }
 
     @Operation(description = "mise à jour d'une université")
-    @PutMapping("modify-university")
+    @PutMapping("")
     public Universite modifyUniversity(@RequestBody Universite universite){
         return universiteService.modifyUniversity(universite);
     }
