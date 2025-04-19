@@ -7,7 +7,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Date;
@@ -15,6 +18,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+
 @RequestMapping("/reservation")
 @Tag(name = "Gestion reservation")
 public class ReservationRestController {
@@ -23,22 +27,23 @@ public class ReservationRestController {
 
     @Operation(description = "récupérer toutes les reservations de la base de données")
     @GetMapping
-    public List<Reservation> getAllReservations(){
-        return reservationService.retreiveAllReservations();
+    @PreAuthorize("hasRole('ROLE_reservation_client_admin')")
+    public Flux<Reservation> getAllReservations(){
+        return Flux.defer(() -> Flux.fromIterable(reservationService.retreiveAllReservations()));
     }
 
-    @Operation(description = "récupérer une reservation par id de la base de données")
+
+    @Operation(description = "Récupérer une reservation par ID de la base de données")
     @GetMapping("/{reservation-id}")
-    public ResponseEntity<Reservation> getReservation(@PathVariable("reservation-id") Integer reservationId){
-        try {
-            Reservation r = reservationService.retrieveReservation(reservationId);
-        }catch (Exception exception) {
-            System.out.println(exception.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        Reservation r = reservationService.retrieveReservation(reservationId);
-        return ResponseEntity.status(HttpStatus.OK).body(r);
+    public Mono<ResponseEntity<Reservation>> getReservation(@PathVariable("reservation-id") Integer reservationId) {
+        return Mono.fromCallable(() -> reservationService.retrieveReservation(reservationId))
+                .map(reservation -> ResponseEntity.ok(reservation)) // If reservation found
+                .onErrorResume(e -> {
+                    System.out.println("Error: " + e.getMessage());
+                    return Mono.just(ResponseEntity.notFound().build()); // 404 if not found
+                });
     }
+
 
     @Operation(description = "récupérer toutes les reservations par validiter")
     @GetMapping("ByValidity/{booleanValue}")

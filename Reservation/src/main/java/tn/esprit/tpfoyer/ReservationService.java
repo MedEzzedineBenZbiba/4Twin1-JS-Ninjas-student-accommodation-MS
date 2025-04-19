@@ -63,20 +63,20 @@ public class ReservationService implements IReservationService{
     }
 
 
-    @Scheduled(cron = "0 */2 * * * *")
-    public void remindStudentsToConfirmReservation() {
-        List<Reservation> invalidReservations = reservationRepository.findAllByEstValide(false);
-
-        for (Reservation r : invalidReservations ) {
-            log.info("repo" + r);
-            try {
-                emailService.sendEmail("benzbibaezzdine@gmail.com", "pay reminder" , true);
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+//    @Scheduled(cron = "0 */2 * * * *")
+//    public void remindStudentsToConfirmReservation() {
+//        List<Reservation> invalidReservations = reservationRepository.findAllByEstValide(false);
+//
+//        for (Reservation r : invalidReservations ) {
+//            log.info("repo" + r);
+//            try {
+//                emailService.sendEmail("benzbibaezzdine@gmail.com", "pay reminder" , true);
+//            } catch (MessagingException e) {
+//                throw new RuntimeException(e);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
 
 }
