@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Form, InputGroup } from 'react-bootstrap';
 import {
@@ -67,7 +68,7 @@ function StudentList() {
     <div className="container mt-4">
       <h2>Liste des Étudiants</h2>
 
-      {/* Recherche par École */}
+     
       <Form onSubmit={handleSearchSubmit} className="mb-3">
         <InputGroup>
           <Form.Control
@@ -80,7 +81,7 @@ function StudentList() {
         </InputGroup>
       </Form>
 
-      {/* Recherche par ID */}
+     
       <Form onSubmit={handleIdSearchSubmit} className="mb-3">
         <InputGroup>
           <Form.Control
@@ -101,7 +102,7 @@ function StudentList() {
       <th>Prénom</th>
       <th>CIN</th>
       <th>École</th>
-      <th>Email</th> {/* ✅ Nouvelle colonne */}
+      <th>Email</th> 
       <th>Date Naissance</th>
       <th>Actions</th>
     </tr>
@@ -114,7 +115,7 @@ function StudentList() {
         <td>{et.prenomEt}</td>
         <td>{et.cin}</td>
         <td>{et.ecole}</td>
-        <td>{et.emailEt}</td> {/* ✅ Affichage de l'email */}
+        <td>{et.emailEt}</td> 
         <td>{new Date(et.dateNaissance).toLocaleDateString()}</td>
         <td>
           <Button variant="info" size="sm" onClick={() => navigate(`/edit/${et.idEtudiant}`)}>Éditer</Button>{' '}

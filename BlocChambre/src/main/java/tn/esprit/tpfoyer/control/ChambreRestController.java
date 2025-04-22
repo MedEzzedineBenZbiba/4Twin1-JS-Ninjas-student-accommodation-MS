@@ -12,37 +12,37 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+
 @RequestMapping("/chambre")
 @Tag(name = "Gestion Chambre")
 public class ChambreRestController {
     IChambreService chambreService;
 
     @Operation(description = "récupérer toutes les chambres de la base de données")
-    @GetMapping("/retrieve-all-chambres")
+    @GetMapping("")
     public List<Chambre> getChambres() {
         List<Chambre> listChambres = chambreService.retrieveAllChambres();
         return listChambres;
     }
-    @GetMapping("/retrieve-chambre/{chambre-id}")
+    @GetMapping("{chambre-id}")
     @Operation(description = "récupérer la chambre par id ")
     public Chambre retrieveChambre(@PathVariable("chambre-id") Long chId) {
         Chambre chambre = chambreService.retrieveChambreById(chId);
         return chambre;
     }
-    @PostMapping("/add-chambre")
+    @PostMapping("")
     @Operation(description = "Ajouter une chambre dans la base de données")
     public Chambre addChambre(@RequestBody Chambre c) {
         Chambre chambre = chambreService.addChambre(c);
         return chambre;
     }
-    @DeleteMapping("/remove-chambre/{chambre-id}")
+    @DeleteMapping("{chambre-id}")
     @Operation(description = "retirer une chambre par id")
     public void removeChambre(@PathVariable("chambre-id") Long chId) {
 
         chambreService.removeChambre(chId);
     }
-    @PutMapping("/modify-chambre")
+    @PutMapping("")
     @Operation(description = "mise à jour une chambre de la base de données")
     public Chambre modifyChambre(@RequestBody Chambre c) {
         Chambre chambre = chambreService.modifyChambre(c);

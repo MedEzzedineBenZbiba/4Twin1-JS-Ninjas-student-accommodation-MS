@@ -1,27 +1,24 @@
 import axios from 'axios';
+const API_URL = import.meta.env.VITE_API_URL;
+// Fonction utilitaire pour obtenir le token (à adapter selon ton système de stockage)
+const getAuthHeader = () => {
+  const token = localStorage.getItem('token'); // ou sessionStorage, ou un context
+  return { headers: { Authorization: `Bearer ${token}` } };
+};
 
-// L'URL de base : /etudiant (définie dans le contrôleur Spring)
-const API_URL = process.env.REACT_APP_API_URL || '/etudiant';
+export const getAllEtudiants = () => axios.get(`${API_URL}`, getAuthHeader());
 
-// GET: Tous les étudiants (GET /etudiant)
-export const getAllEtudiants = () => axios.get(`${API_URL}`);
+export const getEtudiant = (id) => axios.get(`${API_URL}/${id}`, getAuthHeader());
 
-// GET: Un seul étudiant par ID (GET /etudiant/{id})
-export const getEtudiant = id => axios.get(`${API_URL}/${id}`);
+export const addEtudiant = (etudiant) => axios.post(`${API_URL}`, etudiant, getAuthHeader());
 
-// POST: Ajouter un étudiant (POST /etudiant)
-export const addEtudiant = etudiant => axios.post(`${API_URL}`, etudiant);
+export const updateEtudiant = (etudiant) => axios.put(`${API_URL}`, etudiant, getAuthHeader());
 
-// PUT: Modifier un étudiant (PUT /etudiant)
-export const updateEtudiant = etudiant => axios.put(`${API_URL}`, etudiant);
+export const deleteEtudiant = (id) => axios.delete(`${API_URL}/${id}`, getAuthHeader());
 
-// DELETE: Supprimer un étudiant (DELETE /etudiant/{id})
-export const deleteEtudiant = id => axios.delete(`${API_URL}/${id}`);
-
-// GET: Récupérer les étudiants par école (GET /etudiant/ecole/{ecole})
-export const getEtudiantsByEcole = ecole => axios.get(`${API_URL}/ecole/${ecole}`);
+export const getEtudiantsByEcole = (ecole) => axios.get(`${API_URL}/ecole/${ecole}`, getAuthHeader());
 
 export const fetchEmails = async () => {
-    const response = await axios.get(API_URL);
-    return response.data.map((etudiant) => etudiant.email || etudiant.emailEt);
-  };
+  const response = await axios.get(API_URL, getAuthHeader());
+  return response.data.map((etudiant) => etudiant.email || etudiant.emailEt);
+};

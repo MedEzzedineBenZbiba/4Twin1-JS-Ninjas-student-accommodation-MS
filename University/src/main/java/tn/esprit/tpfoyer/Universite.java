@@ -20,6 +20,6 @@ public class Universite {
     private String nomUniversite;
     private String adresse;
 
-    private Long foyerId;
+    private Long idFoyer;
 
 }

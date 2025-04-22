@@ -15,7 +15,6 @@ import java.util.Map;
 @AllArgsConstructor
 @RequestMapping("university")
 
-
 @Tag(name = "Gestion université")
 public class UniversityRestController {
     IUniversiteService universiteService;

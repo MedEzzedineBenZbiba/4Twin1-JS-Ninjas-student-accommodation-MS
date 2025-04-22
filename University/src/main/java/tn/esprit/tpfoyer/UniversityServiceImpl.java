@@ -45,7 +45,7 @@ public class UniversityServiceImpl implements IUniversiteService{
                 .orElseThrow(() -> new RuntimeException("Université non trouvée"));
 
         // 2. Appeler le microservice Foyer pour récupérer le foyer
-        FoyerDTO foyerDTO = foyerClient.getFoyerById(universite.getFoyerId());
+        FoyerDTO foyerDTO = foyerClient.getFoyerById(universite.getIdFoyer());
 
         // 3. Combiner les données
         return mapToUniversiteWithFoyerDTO(universite, foyerDTO);

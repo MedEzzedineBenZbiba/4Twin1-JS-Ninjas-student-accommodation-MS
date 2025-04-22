@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
 
-
+// Icone Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -14,11 +14,10 @@ L.Icon.Default.mergeOptions({
 });
 
 const LocationMarker = ({ setPosition, setFormData }) => {
-  const map = useMapEvents({
+  useMapEvents({
     async click(e) {
       setPosition(e.latlng);
       try {
-        
         const response = await axios.get(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`
         );
@@ -52,14 +51,20 @@ const UniversiteStats = () => {
     position: null
   });
 
-      
+  const token = localStorage.getItem("token"); // Récupération du token
+
   useEffect(() => {
     fetchStats();
   }, []);
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get('http://localhost:8090/university/stats/adresse');
+      const response = await axios.get('http://localhost:8090/university/stats/adresse', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
       const statsArray = Object.entries(response.data).map(([adresse, count]) => ({
         adresse,
         count: Math.floor(Number(count))
@@ -85,8 +90,13 @@ const UniversiteStats = () => {
         adresse: formData.adresse,
         latitude: formData.position?.lat,
         longitude: formData.position?.lng
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
-      fetchStats(); 
+
+      fetchStats();
       setShowForm(false);
       setFormData({
         nomUniversite: '',
@@ -103,11 +113,8 @@ const UniversiteStats = () => {
   return (
     <div className="universite-container">
       <h2>Statistiques des Universités par Adresse</h2>
-      
-      <button 
-        onClick={() => setShowForm(!showForm)}
-        className="toggle-form-btn"
-      >
+
+      <button onClick={() => setShowForm(!showForm)} className="toggle-form-btn">
         {showForm ? 'Masquer le formulaire' : 'Ajouter une université'}
       </button>
 
@@ -125,7 +132,7 @@ const UniversiteStats = () => {
                 required
               />
             </div>
-            
+
             <div className="form-group">
               <label>Adresse:</label>
               <input
@@ -137,21 +144,18 @@ const UniversiteStats = () => {
               />
               <small>Cliquez sur la carte pour détecter l'adresse ou saisissez-la manuellement</small>
             </div>
-            
+
             <div className="map-container">
               <MapContainer
-                center={[ 36.862499, 10.195556]} 
+                center={[36.862499, 10.195556]}
                 zoom={13}
                 style={{ height: '300px', width: '100%' }}
               >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                  attribution='&copy; OpenStreetMap'
                 />
-                <LocationMarker 
-                  setPosition={(pos) => setFormData(prev => ({...prev, position: pos}))} 
-                  setFormData={setFormData}
-                />
+                <LocationMarker setPosition={(pos) => setFormData(prev => ({ ...prev, position: pos }))} setFormData={setFormData} />
                 {formData.position && (
                   <Marker position={formData.position}>
                     <Popup>Nouvelle université</Popup>
@@ -159,45 +163,21 @@ const UniversiteStats = () => {
                 )}
               </MapContainer>
             </div>
-            
-            <button type="submit" className="submit-btn">
-              Enregistrer
-            </button>
+
+            <button type="submit" className="submit-btn">Enregistrer</button>
           </form>
         </div>
       )}
 
       <div className="chart-container">
         <ResponsiveContainer width="100%" height={400}>
-          <BarChart
-            data={stats}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 100,
-            }}
-          >
+          <BarChart data={stats} margin={{ top: 5, right: 30, left: 20, bottom: 100 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="adresse" 
-              angle={-45} 
-              textAnchor="end"
-              height={100}
-              interval={0}
-            />
-            <YAxis 
-              allowDecimals={false}
-              tickCount={Math.max(...stats.map(item => item.count)) + 1}
-            />
+            <XAxis dataKey="adresse" angle={-45} textAnchor="end" height={100} interval={0} />
+            <YAxis allowDecimals={false} tickCount={Math.max(...stats.map(item => item.count)) + 1} />
             <Tooltip formatter={(value) => [parseInt(value), 'Nombre']} />
             <Legend />
-            <Bar 
-              dataKey="count" 
-              name="Nombre d'universités" 
-              fill="#8884d8" 
-              barSize={30}
-            />
+            <Bar dataKey="count" name="Nombre d'universités" fill="#8884d8" barSize={30} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -223,99 +203,9 @@ const UniversiteStats = () => {
           </table>
         </div>
       </div>
-
-      <style jsx>{`
-        .universite-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 20px;
-        }
-        .form-container {
-          background: #f5f5f5;
-          padding: 20px;
-          border-radius: 8px;
-          margin: 20px 0;
-        }
-        .form-group {
-          margin-bottom: 15px;
-        }
-        .form-group label {
-          display: block;
-          margin-bottom: 5px;
-          font-weight: bold;
-        }
-        .form-group input {
-          width: 100%;
-          padding: 8px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-        }
-        .form-group small {
-          display: block;
-          margin-top: 5px;
-          color: #666;
-          font-size: 0.8em;
-        }
-        .map-container {
-          margin: 15px 0;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          overflow: hidden;
-        }
-        .toggle-form-btn, .submit-btn {
-          background: #4CAF50;
-          color: white;
-          border: none;
-          padding: 10px 15px;
-          border-radius: 4px;
-          cursor: pointer;
-          margin: 5px 0;
-        }
-        .toggle-form-btn:hover, .submit-btn:hover {
-          background: #45a049;
-        }
-        .loading {
-          text-align: center;
-          padding: 50px;
-          font-size: 1.2em;
-        }
-        .chart-container {
-          margin: 40px 0;
-        }
-        .table-container {
-          width: 100%;
-          margin-top: 40px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        .table-container h3 {
-          text-align: center;
-        }
-        .table-wrapper {
-          width: 100%;
-          overflow-x: auto;
-          margin-top: 20px;
-        }
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          margin: 0 auto;
-        }
-        th, td {
-          padding: 12px;
-          border: 1px solid #ddd;
-          text-align: center;
-        }
-        th {
-          background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-          background-color: #f9f9f9;
-        }
-      `}</style>
     </div>
   );
 };
 
 export default UniversiteStats;
+``

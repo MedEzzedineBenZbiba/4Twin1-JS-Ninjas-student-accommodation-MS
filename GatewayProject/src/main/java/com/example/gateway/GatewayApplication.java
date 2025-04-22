@@ -21,7 +21,7 @@ public class GatewayApplication {
     @Bean
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("EDUDIANT", r->r.path("/etudiant/**").uri("lb://EDUDIANT"))
+                .route("ETUDIANT", r->r.path("/etudiant/**").uri("lb://ETUDIANT"))
                 .route("RESERVATION", r->r.path("/reservation/**").uri("lb://RESERVATION"))
                 .route("UNIVERSITY", r->r.path("/university/**").uri("lb://UNIVERSITY"))
                 .route("BLOCCHAMBRE", r->r.path("/bloc/**").uri("lb://BLOCCHAMBRE"))
@@ -30,18 +30,5 @@ public class GatewayApplication {
                 .build();
     }
 
-    @Bean
-    public CorsWebFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-
-        return new CorsWebFilter(source);
-    }
 
 }

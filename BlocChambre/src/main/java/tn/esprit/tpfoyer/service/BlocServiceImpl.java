@@ -1,6 +1,8 @@
 package tn.esprit.tpfoyer.service;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,15 +18,11 @@ import java.util.Map;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class BlocServiceImpl implements IBlocService {
 
     private final BlocRepository blocRepository;
-    private final RestTemplate restTemplate;
 
-    public BlocServiceImpl(BlocRepository blocRepository, RestTemplate restTemplate) {
-        this.blocRepository = blocRepository;
-        this.restTemplate = restTemplate;
-    }
 
     // Méthodes CRUD de base
     @Scheduled(fixedRate = 60000)

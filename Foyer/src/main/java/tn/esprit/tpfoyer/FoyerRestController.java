@@ -16,7 +16,7 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/foyer")
-@CrossOrigin(origins = "http://localhost:3000") // Ajoutez cette annotation
+// Ajoutez cette annotation
 
 @Tag(name = "Gestion Foyer")
 public class FoyerRestController {
@@ -26,31 +26,31 @@ public class FoyerRestController {
     private final QrCodeService qrCodeService;
 
     @Operation(description = "Récupérer toutes les foyers")
-    @GetMapping("/retrieve-all-foyer")
+    @GetMapping("")
     public List<Foyer> getAllFoyer() {
         return foyerService.retrieveAllFoyers();
     }
 
     @Operation(description = "Récupérer une foyer par id")
-    @GetMapping("/retrieve-foyer/{foyer-id}")
+    @GetMapping("{foyer-id}")
     public Foyer getFoyer(@PathVariable("foyer-id") Long foyerId) {
         return foyerService.retrieveFoyer(foyerId);
     }
 
     @Operation(description = "Ajouter une foyer")
-    @PostMapping("/add-foyer")
+    @PostMapping("")
     public Foyer addFoyer(@RequestBody Foyer foyer) {
         return foyerService.addFoyer(foyer);
     }
 
     @Operation(description = "Supprimer une foyer")
-    @DeleteMapping("/remove-foyer/{foyer-id}")
+    @DeleteMapping("{foyer-id}")
     public void removeFoyer(@PathVariable("foyer-id") Long foyerId) {
         foyerService.removeFoyer(foyerId);
     }
 
     @Operation(description = "Modifier une foyer")
-    @PutMapping("/modify-foyer")
+    @PutMapping("")
     public Foyer modifyFoyer(@RequestBody Foyer foyer) {
         return foyerService.modifyFoyer(foyer);
     }

@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @RestController
 @Tag(name = "Gestion Bloc")
-@CrossOrigin(origins = "http://localhost:5173")
+
 @RequestMapping("/bloc")
 public class BlocRestController {
     private final IBlocService blocService;
@@ -48,34 +48,34 @@ public class BlocRestController {
         }
     }
 
-    @GetMapping("/retrieve-all-blocs")
+    @GetMapping
     @Operation(summary = "Récupérer toutes les blocs de la base de données")
     public ResponseEntity<List<Bloc>> getAllBlocs() {
         return ResponseEntity.ok(blocService.retrieveAllBlocs());
     }
 
-    @GetMapping("/retrieve-bloc/{blocId}")
+    @GetMapping("{blocId}")
     @Operation(summary = "Récupérer un bloc par son ID")
     public ResponseEntity<Bloc> getBlocById(@PathVariable Long blocId) {
         Bloc bloc = blocService.retrieveBloc(blocId);
         return ResponseEntity.ok(bloc);
     }
 
-    @PostMapping("/add-bloc")
+    @PostMapping("")
     @Operation(summary = "Ajouter un nouveau bloc")
     public ResponseEntity<Bloc> addBloc(@RequestBody Bloc bloc) {
         Bloc newBloc = blocService.addBloc(bloc);
         return ResponseEntity.status(HttpStatus.CREATED).body(newBloc);
     }
 
-    @DeleteMapping("/remove-bloc/{blocId}")
+    @DeleteMapping("{blocId}")
     @Operation(summary = "Supprimer un bloc par son ID")
     public ResponseEntity<Void> removeBloc(@PathVariable Long blocId) {
         blocService.removeBloc(blocId);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/modify-bloc")
+    @PutMapping("")
     @Operation(summary = "Mettre à jour un bloc existant")
     public ResponseEntity<Bloc> modifyBloc(@RequestBody Bloc bloc) {
         Bloc updatedBloc = blocService.modifyBloc(bloc);

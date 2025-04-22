@@ -1,43 +1,55 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
-import StudentList from './components/StudentList';
-import StudentForm from './components/StudentForm';
-import HolidayList from './components/HolidayList';
-import MailSender from './components/MailSender';
-import UniversiteStats from './UniversiteStats';
+// src/App.jsx
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import UniversiteStats from "./components/UniversiteStats";
+import Login from "./components/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import StudentList from "./components/StudentList";
+import Reservation from "./components/Reservation";
+import Foyer from "./components/Foyer";
 
 function App() {
   return (
-    <div className="App">
-      <UniversiteStats />
-      <Router>
-        <Navbar bg="dark" variant="dark" expand="lg">
-          <Container>
-            <Navbar.Brand as={Link} to="/">Gestion Étudiants</Navbar.Brand>
-            <Nav className="me-auto">
-              {/* Menu déroulant pour les liens */}
-              <NavDropdown title="Gestion Étudiants" id="navbar-dropdown">
-                <NavDropdown.Item as={Link} to="/">Accueil</NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/add">Ajouter Étudiant</NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/holidays">Jours Fériés</NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/mail">Envoyer Un Email</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-          </Container>
-        </Navbar>
-
-        <Container className="mt-4">
-          <Routes>
-            <Route path="/" element={<StudentList />} />
-            <Route path="/add" element={<StudentForm />} />
-            <Route path="/edit/:id" element={<StudentForm />} />
-            <Route path="/holidays" element={<HolidayList />} /> 
-            <Route path="/mail" element={<MailSender />} /> 
-          </Routes>
-        </Container>
-      </Router>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/universite"
+          element={
+            <ProtectedRoute>
+              <UniversiteStats />
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/student"
+          element={
+            <ProtectedRoute>
+              <StudentList/>
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/reservation"
+          element={
+            <ProtectedRoute>
+              <Reservation/>
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/foyer"
+          element={
+            <ProtectedRoute>
+              <Foyer/>
+            </ProtectedRoute>
+          }
+        />
+        
+      
+        <Route path="*" element={<Login />} />
+      </Routes>
+    </Router>
   );
 }
 
