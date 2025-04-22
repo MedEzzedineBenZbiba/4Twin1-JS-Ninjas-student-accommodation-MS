@@ -1,0 +1,30 @@
+server:
+  port: 8222
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+#      routes:
+#        - id: etudiant-service
+#          uri: lb://etudiant-service
+#          predicates:
+#            - Path=/etudiant/**
+#        - id: reservation-service
+#          uri: lb://reservation-service
+#          predicates:
+#            - Path=/reservation/**
+#        - id: university-service
+#          uri: lb://university-service
+#          predicates:
+#            - Path=/university/**
+#        - id: BlocChambre-service
+#          uri: lb://BlocChambre-service
+#          predicates:
+#            - Path=/bloc/**, /chambre/**
+#        - id: foyer-service
+#          uri: lb://foyer-service
+#          predicates:
+#            - Path=/foyer/**
+
