@@ -14,7 +14,8 @@ import java.util.Date;
 @ToString
 public class Reservation {
     @Id
-    private String idReservation;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idReservation;
     private Date anneeUniversitaire;
     private boolean estValide;
 }

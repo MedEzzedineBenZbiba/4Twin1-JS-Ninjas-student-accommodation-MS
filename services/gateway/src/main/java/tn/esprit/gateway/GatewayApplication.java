@@ -23,12 +23,21 @@ public class GatewayApplication {
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 		return builder.routes()
-				.route("etudiant-service", r->r.path("/etudiant/**").uri("lb://etudiant-service"))
-				.route("reservation-service", r->r.path("/reservation/**").uri("lb://reservation-service"))
-				.route("university-service", r->r.path("/university/**").uri("lb://university-service"))
-				.route("BlocChambre-service", r->r.path("/bloc/**").uri("lb://BlocChambre-service"))
-				.route("BlocChambre-service", r->r.path("/chambre/**").uri("lb://BlocChambre-service"))
-				.route("foyer-service", r->r.path("/foyer/**").uri("lb://foyer-service"))
+				.route("etudiant-service", r -> r.path("/etudiant/**")
+						.uri("lb://etudiant-service"))
+				.route("reservation-service", r -> r.path("/reservation/**")
+						.uri("lb://reservation-service"))
+				.route("university-service", r -> r.path("/university/**")
+						.uri("lb://university-service"))
+				.route("bloc-service", r -> r.path("/bloc/**")
+						.uri("lb://BlocChambre-service"))
+				.route("chambre-service", r -> r.path("/chambre/**")
+						.uri("lb://BlocChambre-service"))
+				.route("foyer-service", r -> r.path("/foyer/**")
+						.uri("lb://foyer-service"))
+				.route("mailing-service", r -> r.path("/mailing/**")
+						.filters(f -> f.stripPrefix(1))
+						.uri("http://localhost:4000"))
 				.build();
 	}
 

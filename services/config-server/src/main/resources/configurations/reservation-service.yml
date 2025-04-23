@@ -11,7 +11,7 @@ spring:
   datasource:
     username: sa
     password: password  # Aligné avec docker-compose.yml:reservation-service
-    url: jdbc:h2:file:./Database/Data/Reservation;AUTO_SERVER=TRUE
+    url: jdbc:h2:file:./Database/Data/Reservation-db;AUTO_SERVER=TRUE
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:

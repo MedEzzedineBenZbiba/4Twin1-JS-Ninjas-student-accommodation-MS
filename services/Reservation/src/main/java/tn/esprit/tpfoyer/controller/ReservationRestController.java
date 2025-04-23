@@ -24,7 +24,7 @@ public class ReservationRestController {
 
     @Operation(description = "récupérer une reservation par id de la base de données")
     @GetMapping("{reservation-id}")
-    public Reservation getReservation(@PathVariable("reservation-id") String reservationId){
+    public Reservation getReservation(@PathVariable("reservation-id") Long reservationId){
         return reservationService.retrieveReservation(reservationId);
     }
 
@@ -36,7 +36,7 @@ public class ReservationRestController {
 
     @Operation(description = "retirer une reservation par id")
     @DeleteMapping("{reservation-id}")
-    public void deleteReservation(@PathVariable("reservation-id") String reservationId){
+    public void deleteReservation(@PathVariable("reservation-id") Long reservationId){
         reservationService.removeReservation(reservationId);
     }
 
