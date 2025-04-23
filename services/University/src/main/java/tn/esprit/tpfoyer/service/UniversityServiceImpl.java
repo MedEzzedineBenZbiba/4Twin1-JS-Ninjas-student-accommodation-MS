@@ -5,13 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.esprit.tpfoyer.dto.Foyer;
+import tn.esprit.tpfoyer.dto.UniversiteWithFoyerDTO;
 import tn.esprit.tpfoyer.entity.Universite;
 import tn.esprit.tpfoyer.exception.FoyerNotFoundException;
 import tn.esprit.tpfoyer.exception.UniversiteNotFoundException;
 import tn.esprit.tpfoyer.feign.FoyerClient;
 import tn.esprit.tpfoyer.repository.UniversiteRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -156,4 +159,40 @@ public class UniversityServiceImpl implements IUniversiteService {
             throw new IllegalArgumentException("University address cannot be null or empty");
         }
     }
+
+    public UniversiteWithFoyerDTO getFoyerByNomUniversite(String nomUniversite) {
+        // 1. Trouver l'université par son nom
+        Universite universite = universiteRepository.findByNomUniversite(nomUniversite)
+                .orElseThrow(() -> new RuntimeException("Université non trouvée"));
+
+        // 2. Appeler le microservice Foyer pour récupérer le foyer
+        Foyer foyerDTO = foyerClient.getFoyerById(universite.getFoyerId());
+
+        // 3. Combiner les données
+        return mapToUniversiteWithFoyerDTO(universite, foyerDTO);
+    }
+
+    private UniversiteWithFoyerDTO mapToUniversiteWithFoyerDTO(Universite universite, Foyer foyerDTO) {
+        UniversiteWithFoyerDTO dto = new UniversiteWithFoyerDTO();
+        dto.setIdUniversite(universite.getIdUniversite());
+        dto.setNomUniversite(universite.getNomUniversite());
+        dto.setAdresse(universite.getAdresse());
+        dto.setFoyer(foyerDTO);
+        return dto;
+    }
+
+
+    public Map<String, Long> getUniversitesCountByAdresse() {
+        List<Object[]> results = universiteRepository.countUniversitesByAdresse();
+
+        Map<String, Long> stats = new HashMap<>();
+        for (Object[] result : results) {
+            String adresse = (String) result[0];
+            Long count = (Long) result[1];
+            stats.put(adresse, count);
+        }
+
+        return stats;
+    }
+
 }

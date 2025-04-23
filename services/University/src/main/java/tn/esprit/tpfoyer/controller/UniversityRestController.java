@@ -9,10 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.tpfoyer.dto.AssignFoyerToUniversiteRequest;
+import tn.esprit.tpfoyer.dto.UniversiteWithFoyerDTO;
 import tn.esprit.tpfoyer.entity.Universite;
 import tn.esprit.tpfoyer.service.IUniversiteService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -83,4 +85,21 @@ public class UniversityRestController {
         Universite universite = universiteService.desaffectFoyerFromUniversite(universityId);
         return ResponseEntity.ok(universite);
     }
+
+
+
+    @GetMapping("/{nomUniversite}/foyer")
+    public ResponseEntity<UniversiteWithFoyerDTO> getFoyerByUniversiteName(
+            @PathVariable String nomUniversite
+    ) {
+        return ResponseEntity.ok(universiteService.getFoyerByNomUniversite(nomUniversite));
+    }
+
+
+
+    @GetMapping("/stats/adresse")
+    public ResponseEntity<Map<String, Long>> getStatsByAdresse() {
+        return ResponseEntity.ok(universiteService.getUniversitesCountByAdresse());
+    }
+
 }

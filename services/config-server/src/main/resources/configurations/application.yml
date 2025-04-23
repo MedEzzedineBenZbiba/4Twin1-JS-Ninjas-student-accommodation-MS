@@ -10,4 +10,15 @@ spring:
   cloud:
     config:
       override-system-properties: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/student_accommodation
 
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          cors : DEBUG

@@ -10,6 +10,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
+
 @EnableDiscoveryClient
 @SpringBootApplication
 public class GatewayApplication {
@@ -21,16 +23,16 @@ public class GatewayApplication {
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 		return builder.routes()
-				.route("EDUDIANT", r->r.path("/etudiant/**").uri("lb://EDUDIANT"))
-				.route("RESERVATION", r->r.path("/reservation/**").uri("lb://RESERVATION"))
-				.route("UNIVERSITY", r->r.path("/university/**").uri("lb://UNIVERSITY"))
-				.route("BLOCCHAMBRE", r->r.path("/bloc/**").uri("lb://BLOCCHAMBRE"))
-				.route("BLOCCHAMBRE", r->r.path("/chambre/**").uri("lb://BLOCCHAMBRE"))
-				.route("FOYER", r->r.path("/foyer/**").uri("lb://FOYER"))
+				.route("etudiant-service", r->r.path("/etudiant/**").uri("lb://etudiant-service"))
+				.route("reservation-service", r->r.path("/reservation/**").uri("lb://reservation-service"))
+				.route("university-service", r->r.path("/university/**").uri("lb://university-service"))
+				.route("BlocChambre-service", r->r.path("/bloc/**").uri("lb://BlocChambre-service"))
+				.route("BlocChambre-service", r->r.path("/chambre/**").uri("lb://BlocChambre-service"))
+				.route("foyer-service", r->r.path("/foyer/**").uri("lb://foyer-service"))
 				.build();
 	}
 
-	@Bean
+	/*@Bean
 	public CorsWebFilter corsFilter() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
@@ -42,6 +44,22 @@ public class GatewayApplication {
 		source.registerCorsConfiguration("/**", config);
 
 		return new CorsWebFilter(source);
+	}*/
+	@Bean
+	public CorsWebFilter corsFilter() {
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(true);
+		config.setAllowedOriginPatterns(List.of("http://localhost:5173")); // Important !
+		config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+		config.setMaxAge(3600L);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+
+		return new CorsWebFilter(source);
 	}
+
+
 
 }
