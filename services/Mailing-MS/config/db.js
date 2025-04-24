@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
   try {
     // Utilise la variable d'environnement MONGO_URI sinon une valeur par défaut
-    const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/mailing';
+    const mongoURI = process.env.MONGO_URI || 'mongodb://mongodb:27017/mailing';
     await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
