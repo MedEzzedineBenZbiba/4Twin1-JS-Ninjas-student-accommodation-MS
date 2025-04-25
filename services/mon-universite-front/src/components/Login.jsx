@@ -41,7 +41,7 @@ const Login = () => {
             // data.append("client_secret", "your-client-secret");
 
             const response = await axios.post(
-                "http://localhost:8080/realms/student_accommodation/protocol/openid-connect/token",
+                "http://localhost:8180/realms/student_accommodation/protocol/openid-connect/token",
                 data,
                 {
                     headers: {

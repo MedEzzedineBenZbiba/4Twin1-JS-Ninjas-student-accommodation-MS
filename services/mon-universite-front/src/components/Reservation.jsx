@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+// Axios configuration
+axios.defaults.withCredentials = true;
 // Header avec token
 const getAuthHeader = () => {
   const token = localStorage.getItem('token');
-  return { headers: { Authorization: `Bearer ${token}` } };
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    withCredentials: true  // Important for CORS with credentials
+  };
 };
 
 const Reservation = () => {

@@ -1,6 +1,6 @@
 eureka:
   instance:
-    hostname: discovery-service
+    hostname: ${spring.application.name}
     prefer-ip-address: false
   client:
     serviceUrl:
@@ -14,7 +14,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak:8080/realms/student_accommodation
+          issuer-uri: http://localhost:8180/realms/student_accommodation
+          jwk-set-uri: http://keycloak:8080/realms/student_accommodation/protocol/openid-connect/certs
 
 logging:
   level:

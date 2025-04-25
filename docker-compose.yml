@@ -5,7 +5,7 @@ services:
       context: ./services/discovery
       dockerfile: Dockerfile
     container_name: discovery-service
-    image: tahermabrouk1/discovery-service
+    image: ezzdinbz/discovery-service
     ports:
       - "8761:8761"
     depends_on:
@@ -33,7 +33,7 @@ services:
       context: ./services/config-server
       dockerfile: Dockerfile
     container_name: config-server
-    image: tahermabrouk1/config-server
+    image: ezzdinbz/config-server
     ports:
       - "8888:8888"
     environment:
@@ -56,7 +56,7 @@ services:
       context: ./services/gateway
       dockerfile: Dockerfile
     container_name: gateway-service
-    image: tahermabrouk1/gateway-service
+    image: ezzdinbz/gateway-service
     ports:
       - "8222:8222"
     environment:
@@ -64,6 +64,8 @@ services:
       - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_GATEWAY=DEBUG
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
       - SPRING_CONFIG_IMPORT=configserver:http://config-server:8888
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI=http://keycloak:8080/realms/student_accommodation
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/student_accommodation
     networks:
       - microservices-net
     depends_on:
@@ -92,17 +94,22 @@ services:
       - DB_USER=univer
       - DB_PASSWORD=univer
       - PROXY_ADDRESS_FORWARDING=true
-      - KEYCLOAK_FRONTEND_URL=http://localhost:8080/auth
+      - KEYCLOAK_FRONTEND_URL=http://localhost:8180
+      - KC_HOSTNAME=localhost  # Explicit hostname
+      - KC_HTTP_CORS_ORIGINS=http://localhost:5173
+      - KC_HTTP_CORS_ALLOWED_METHODS=GET,POST,PUT,DELETE,OPTIONS
+      - KC_HTTP_CORS_ALLOWED_HEADERS=*
+      - KC_HTTP_CORS_ALLOW_CREDENTIALS=true
     volumes:
       - keycloak_data:/opt/keycloak/data
     ports:
-      - "8080:8080"
+      - "8180:8080"
     depends_on:
       - mysql
     networks:
       - microservices-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8180/health/ready"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -203,7 +210,7 @@ services:
       context: ./services/mailing-MS
       dockerfile: Dockerfile
     container_name: mailing-service
-    image: tahermabrouk1/mailing-service
+    image: ezzdinbz/mailing-service
     environment:
       - NODE_ENV=development
       - MAIL_HOST=mail-dev
@@ -231,7 +238,7 @@ services:
       context: ./services/mon-universite-front
       dockerfile: Dockerfile
     container_name: frontend
-    image: tahermabrouk1/frontend
+    image: ezzdinbz/frontend
     ports:
       - "5173:5173"
     networks:
@@ -249,7 +256,7 @@ services:
       context: ./services/University
       dockerfile: Dockerfile
     container_name: university-service
-    image: tahermabrouk1/university-service
+    image: ezzdinbz/university-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
@@ -283,7 +290,7 @@ services:
       context: ./services/Foyer
       dockerfile: Dockerfile
     container_name: foyer-service
-    image: tahermabrouk1/foyer-service
+    image: ezzdinbz/foyer-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
@@ -317,7 +324,7 @@ services:
       context: ./services/BlocChambre
       dockerfile: Dockerfile
     container_name: BlocChambre-service
-    image: tahermabrouk1/bloc-chambre-service
+    image: ezzdinbz/bloc-chambre-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
@@ -349,14 +356,14 @@ services:
       context: ./services/Etudiant
       dockerfile: Dockerfile
     container_name: etudiant-service
-    image: tahermabrouk1/etudiant-service
+    image: ezzdinbz/etudiant-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
       - SPRING_CONFIG_IMPORT=configserver:http://config-server:8888
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/etudiant
-      - SPRING_DATASOURCE_USERNAME=univer
-      - SPRING_DATASOURCE_PASSWORD=univer
+      - SPRING_DATASOURCE_USERNAME= univer
+      - SPRING_DATASOURCE_PASSWORD= univer
       - SPRING_JPA_HIBERNATE_DDL-AUTO=update
     ports:
       - "8089:8089"
@@ -381,7 +388,7 @@ services:
       context: ./services/Reservation
       dockerfile: Dockerfile
     container_name: reservation-service
-    image: tahermabrouk1/reservation-service
+    image: ezzdinbz/reservation-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/

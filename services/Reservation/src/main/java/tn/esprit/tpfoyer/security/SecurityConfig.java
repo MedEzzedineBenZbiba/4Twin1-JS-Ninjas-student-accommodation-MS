@@ -27,7 +27,9 @@ public class SecurityConfig {
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth -> oauth
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesConverter()))
+                        .jwt(jwt -> jwt
+                                .jwkSetUri("http://keycloak:8080/realms/student_accommodation/protocol/openid-connect/certs")
+                                .jwtAuthenticationConverter(grantedAuthoritiesConverter()))
                 )
                 .build();
     }
